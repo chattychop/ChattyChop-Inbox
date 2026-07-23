@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>ChattyCHOP Inbox — AI Gmail Assistant</title>
+<meta name="description" content="ChattyCHOP Inbox is a free AI-powered Gmail assistant. Chat with your inbox, draft emails with AI, manage calendar and tasks."/>
+<meta property="og:title" content="ChattyCHOP Inbox — AI Gmail Assistant"/>
+<meta property="og:description" content="Chat with your inbox, draft emails with AI, manage calendar and tasks — all in one place."/>
+<meta property="og:url" content="https://chattychop.github.io/ChattyChop-Inbox/"/>
+<link rel="canonical" href="https://chattychop.github.io/ChattyChop-Inbox/"/>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{--bg:#080808;--s:#111;--b:#1a1a1a;--t:#f0f0f0;--t2:#888;--t3:#444;--a:#ff6b2b;--a2:#ff8c42;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--t);font-family:'Inter',sans-serif;overflow-x:hidden;}
+
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:14px 32px;display:flex;align-items:center;justify-content:space-between;background:rgba(8,8,8,.9);backdrop-filter:blur(16px);border-bottom:1px solid var(--b);}
+.nlogo{display:flex;align-items:center;gap:10px;text-decoration:none;}
+.nicon{width:34px;height:34px;border-radius:50% !important;background:var(--a);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:14px;color:#fff;flex-shrink:0;}
+.ntext{font-weight:700;font-size:15px;color:var(--t);}
+.nlinks{display:flex;align-items:center;gap:20px;}
+.nlinks button{background:none;border:none;font-size:13px;color:var(--t2);cursor:pointer;font-family:'Inter',sans-serif;transition:color .15s;}
+.nlinks button:hover{color:var(--t);}
+.ncta{padding:8px 18px;background:var(--a);border:none;border-radius:8px;color:#fff;font-size:13px;font-weight:600;cursor:pointer;transition:background .15s;}
+.ncta:hover{background:var(--a2);}
+
+/* HERO */
+section{padding:80px 24px;}
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding-top:120px;position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;top:30%;left:50%;transform:translateX(-50%);width:700px;height:400px;background:radial-gradient(ellipse,rgba(255,107,43,.1) 0%,transparent 70%);pointer-events:none;}
+.badge{display:inline-flex;align-items:center;gap:6px;background:#1a1a1a;border:1px solid #222;border-radius:20px;padding:5px 14px;font-size:12px;color:var(--t2);margin-bottom:28px;}
+.badge b{color:var(--a);}
+h1{font-size:clamp(38px,6vw,72px);font-weight:900;line-height:1.05;letter-spacing:-2px;max-width:820px;margin-bottom:20px;}
+h1 em{font-style:normal;color:var(--a);}
+.hero p{font-size:clamp(15px,2vw,19px);color:var(--t2);max-width:520px;line-height:1.7;margin-bottom:36px;}
+.btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
+.bp{padding:14px 28px;background:var(--a);border:none;border-radius:10px;color:#fff;font-size:15px;font-weight:700;cursor:pointer;transition:all .2s;text-decoration:none;display:inline-block;}
+.bp:hover{background:var(--a2);transform:translateY(-2px);}
+.bs{padding:14px 28px;background:transparent;border:1px solid #222;border-radius:10px;color:var(--t2);font-size:15px;font-weight:600;cursor:pointer;transition:all .2s;background:none;font-family:'Inter',sans-serif;}
+.bs:hover{border-color:#444;color:var(--t);}
+.hnote{margin-top:14px;font-size:12px;color:var(--t3);}
+
+/* DEMO WINDOW */
+.demo-wrap{max-width:880px;margin:0 auto;padding:0 24px 80px;}
+.dw{background:#0f0f0f;border:1px solid #1e1e1e;border-radius:16px;overflow:hidden;box-shadow:0 40px 120px rgba(0,0,0,.7);}
+.dbar{background:#111;padding:12px 16px;display:flex;align-items:center;gap:8px;border-bottom:1px solid #1a1a1a;}
+.dot{width:10px;height:10px;border-radius:50%;}
+.dtitle{font-size:12px;color:var(--t3);margin:0 auto;}
+.dbody{display:grid;grid-template-columns:190px 1fr;}
+.dsidebar{background:#0a0a0a;border-right:1px solid #1a1a1a;padding:14px 10px;}
+.dni{padding:7px 10px;border-radius:7px;font-size:12px;color:var(--t3);margin-bottom:2px;}
+.dni.a{background:#1a1a1a;color:var(--t);}
+.dchat{padding:20px;display:flex;flex-direction:column;gap:14px;min-height:240px;}
+.dm{display:flex;gap:10px;}
+.dm.u{flex-direction:row-reverse;}
+.dav{width:26px;height:26px;border-radius:50%;background:var(--a);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:900;color:#fff;flex-shrink:0;}
+.db{background:#1a1a1a;border-radius:12px;padding:10px 14px;font-size:12px;line-height:1.6;color:#ccc;max-width:78%;}
+.db.u{background:#ff6b2b18;border:1px solid #ff6b2b30;color:#e8e8e8;}
+.dinp{padding:10px 14px;border-top:1px solid #1a1a1a;display:flex;gap:8px;}
+.dib{flex:1;background:#1a1a1a;border:1px solid #222;border-radius:8px;padding:7px 12px;font-size:12px;color:var(--t3);}
+.dsend{width:28px;height:28px;background:var(--a);border:none;border-radius:7px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+
+/* SCREENSHOTS */
+.shots-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;max-width:1100px;margin:48px auto 0;}
+.shot{background:#0d0d0d;border:1px solid #1a1a1a;border-radius:14px;overflow:hidden;transition:transform .2s,border-color .2s;}
+.shot:hover{transform:translateY(-4px);border-color:#333;}
+.shot-header{background:#111;padding:10px 14px;border-bottom:1px solid #1a1a1a;display:flex;align-items:center;gap:6px;}
+.shot-dots{display:flex;gap:5px;}
+.shot-dot{width:8px;height:8px;border-radius:50%;}
+.shot-title{font-size:11px;color:var(--t3);margin-left:auto;}
+.shot-body{padding:16px;}
+.shot-label{font-size:13px;font-weight:700;margin-bottom:6px;}
+.shot-desc{font-size:12px;color:var(--t2);line-height:1.6;}
+.shot-preview{margin-top:12px;background:#0a0a0a;border-radius:8px;padding:12px;border:1px solid #111;}
+.email-row{display:flex;gap:8px;align-items:center;padding:7px 0;border-bottom:1px solid #111;}
+.email-row:last-child{border:none;}
+.eav{width:28px;height:28px;border-radius:50%;background:#1a2f4a;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#3b82f6;flex-shrink:0;}
+.einfo{flex:1;overflow:hidden;}
+.efrom{font-size:11px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.esub{font-size:10px;color:var(--t3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.cal-ev{background:#1a2f1a;border-left:3px solid #22c55e;border-radius:4px;padding:6px 8px;margin-bottom:6px;}
+.cal-ev-title{font-size:11px;font-weight:600;color:#22c55e;}
+.cal-ev-time{font-size:10px;color:var(--t3);}
+.todo-item{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid #111;}
+.todo-check{width:14px;height:14px;border-radius:3px;border:1px solid #333;flex-shrink:0;}
+.todo-check.done{background:var(--a);border-color:var(--a);}
+.todo-text{font-size:11px;color:var(--t2);}
+.todo-text.done{text-decoration:line-through;color:var(--t3);}
+
+/* FEATURES */
+.feat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1px;background:#1a1a1a;border-radius:16px;overflow:hidden;max-width:1100px;margin:48px auto 0;}
+.fc{background:#0d0d0d;padding:28px;transition:background .2s;}
+.fc:hover{background:#111;}
+.ficon{width:40px;height:40px;border-radius:10px;background:#1a1a1a;display:flex;align-items:center;justify-content:center;font-size:18px;margin-bottom:16px;}
+.ftitle{font-size:15px;font-weight:700;margin-bottom:8px;}
+.fdesc{font-size:13px;color:var(--t2);line-height:1.7;}
+
+/* UPDATES */
+.updates-list{max-width:680px;margin:48px auto 0;display:flex;flex-direction:column;gap:0;}
+.update{display:flex;gap:20px;padding:24px 0;border-bottom:1px solid #111;}
+.update:last-child{border:none;}
+.update-date{font-size:11px;color:var(--a);font-weight:600;white-space:nowrap;padding-top:3px;min-width:80px;}
+.update-content{}
+.update-title{font-size:14px;font-weight:700;margin-bottom:4px;}
+.update-desc{font-size:13px;color:var(--t2);line-height:1.6;}
+.update-tag{display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;margin-left:8px;}
+.tag-new{background:#1a2f1a;color:#22c55e;}
+.tag-fix{background:#2a1a1a;color:#f87171;}
+.tag-imp{background:#1a2040;color:#60a5fa;}
+
+/* TESTIMONIALS */
+.reviews-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;max-width:1100px;margin:48px auto 0;}
+.review{background:#0d0d0d;border:1px solid #1a1a1a;border-radius:14px;padding:24px;}
+.stars{color:var(--a);font-size:14px;margin-bottom:12px;letter-spacing:2px;}
+.rtext{font-size:13px;color:var(--t2);line-height:1.7;margin-bottom:16px;}
+.rauthor{display:flex;align-items:center;gap:10px;}
+.rav{width:32px;height:32px;border-radius:50%;background:var(--a);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff;}
+.rname{font-size:13px;font-weight:600;}
+.rrole{font-size:11px;color:var(--t3);}
+
+/* FEEDBACK FORM */
+.form-wrap{max-width:560px;margin:48px auto 0;background:#0d0d0d;border:1px solid #1a1a1a;border-radius:16px;padding:32px;}
+.finp{width:100%;background:#0a0a0a;border:1px solid #1e1e1e;border-radius:8px;padding:10px 14px;color:var(--t);font-size:13px;outline:none;box-sizing:border-box;font-family:'Inter',sans-serif;margin-bottom:10px;transition:border-color .15s;}
+.finp:focus{border-color:var(--a);}
+textarea.finp{resize:vertical;min-height:100px;}
+.fsubmit{width:100%;padding:12px;background:var(--a);border:none;border-radius:8px;color:#fff;font-size:14px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;transition:background .15s;}
+.fsubmit:hover{background:var(--a2);}
+.fmsg{text-align:center;font-size:13px;margin-top:10px;min-height:18px;color:#22c55e;}
+
+/* PRICING */
+.pricing-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;max-width:900px;margin:48px auto 0;}
+.pc{background:#0d0d0d;border:1px solid #1a1a1a;border-radius:14px;padding:24px;position:relative;}
+.pc.feat{border-color:var(--a);background:#110a05;}
+.pbadge{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--a);color:#fff;font-size:11px;font-weight:700;padding:4px 14px;border-radius:20px;white-space:nowrap;}
+.pname{font-size:13px;font-weight:600;color:var(--t2);margin-bottom:8px;}
+.pprice{font-size:32px;font-weight:900;letter-spacing:-1px;margin-bottom:4px;}
+.pprice span{font-size:14px;font-weight:400;color:var(--t2);}
+.pdesc{font-size:12px;color:var(--t3);margin-bottom:20px;line-height:1.6;}
+.pfeats{display:flex;flex-direction:column;gap:8px;margin-bottom:24px;}
+.pfeat{font-size:12px;color:var(--t2);display:flex;align-items:center;gap:8px;}
+.pfeat::before{content:'✓';color:var(--a);font-weight:700;flex-shrink:0;}
+.pbtn{width:100%;padding:10px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;text-align:center;text-decoration:none;display:block;transition:all .2s;font-family:'Inter',sans-serif;}
+.pbtn.o{background:transparent;border:1px solid #222;color:var(--t2);}
+.pbtn.o:hover{border-color:#444;color:var(--t);}
+.pbtn.f{background:var(--a);border:none;color:#fff;}
+.pbtn.f:hover{background:var(--a2);}
+
+/* SECTION HEADERS */
+.slabel{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--a);margin-bottom:12px;text-align:center;}
+.stitle{font-size:clamp(26px,4vw,44px);font-weight:800;text-align:center;letter-spacing:-1px;margin-bottom:12px;}
+.ssub{font-size:15px;color:var(--t2);text-align:center;max-width:480px;margin:0 auto;line-height:1.7;}
+
+/* FOOTER */
+footer{padding:48px 24px;border-top:1px solid var(--b);text-align:center;}
+.flogo{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:16px;}
+.flinks{display:flex;gap:20px;justify-content:center;flex-wrap:wrap;margin-bottom:16px;}
+.flinks a{font-size:13px;color:var(--t3);text-decoration:none;transition:color .15s;}
+.flinks a:hover{color:var(--t2);}
+footer p{font-size:12px;color:var(--t3);}
+
+@media(max-width:600px){
+  nav{padding:12px 16px;}
+  .nlinks{display:none;}
+  .dbody{grid-template-columns:1fr;}
+  .dsidebar{display:none;}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nlogo" href="#">
+    <div class="nicon">C</div>
+    <span class="ntext">ChattyCHOP Inbox</span>
+  </a>
+  <div class="nlinks">
+    <button onclick="document.getElementById('features').scrollIntoView({behavior:'smooth'})">Features</button>
+    <button onclick="document.getElementById('screenshots').scrollIntoView({behavior:'smooth'})">Screenshots</button>
+    <button onclick="document.getElementById('pricing').scrollIntoView({behavior:'smooth'})">Pricing</button>
+    <button onclick="document.getElementById('getcode').scrollIntoView({behavior:'smooth'})">Get Code</button>
+    <button onclick="document.getElementById('updates').scrollIntoView({behavior:'smooth'})">Updates</button>
+    <button onclick="document.getElementById('feedback').scrollIntoView({behavior:'smooth'})">Reviews</button>
+  </div>
+  <button class="ncta" onclick="window.location.href='app.html'">Open App →</button>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="badge">🔍 Search <b>"ChattyCHOP Inbox"</b> on Google — we're live!</div>
+  <h1>Your Gmail,<br/>now <em>actually smart</em></h1>
+  <p>Chat with your inbox, draft emails with AI, manage your calendar and tasks — all in one place. Free to try.</p>
+  <div class="btns">
+    <a class="bp" href="app.html">Get Started Free →</a>
+    <button class="bs" onclick="document.getElementById('features').scrollIntoView({behavior:'smooth'})">See Features</button>
+  </div>
+  <p class="hnote">No credit card · Free plan always available · Sign in with Google</p>
+</section>
+
+<!-- DEMO WINDOW -->
+<div class="demo-wrap">
+  <div class="dw">
+    <div class="dbar">
+      <div class="dot" style="background:#ff5f57"></div>
+      <div class="dot" style="background:#febc2e"></div>
+      <div class="dot" style="background:#28c840"></div>
+      <span class="dtitle">ChattyCHOP Inbox — app.html</span>
+    </div>
+    <div class="dbody">
+      <div class="dsidebar">
+        <div class="dni a">💬 Chat</div>
+        <div class="dni">📩 Inbox</div>
+        <div class="dni">✉️ Compose</div>
+        <div class="dni">📅 Calendar</div>
+        <div class="dni">✅ To Do</div>
+        <div class="dni">📝 Notes</div>
+        <div class="dni">🪔 Support</div>
+      </div>
+      <div style="display:flex;flex-direction:column;">
+        <div class="dchat">
+          <div class="dm">
+            <div class="dav">C</div>
+            <div class="db">Hi! You have 3 unread emails. One from your professor about tomorrow's deadline. Want me to draft a reply?</div>
+          </div>
+          <div class="dm u">
+            <div class="dav" style="background:#333;font-size:9px;">You</div>
+            <div class="db u">Yes, ask for a 2 day extension politely</div>
+          </div>
+          <div class="dm">
+            <div class="dav">C</div>
+            <div class="db">Draft ready ✅ — "Dear Professor, I hope this email finds you well. I am writing to respectfully request a 2-day extension..."</div>
+          </div>
+        </div>
+        <div class="dinp">
+          <div class="dib">Ask anything about your inbox...</div>
+          <div class="dsend">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SCREENSHOTS -->
+<section id="screenshots" style="padding:60px 24px;">
+  <div class="slabel">Screenshots</div>
+  <div class="stitle">Everything in one place</div>
+  <div class="ssub">Real views from inside the app</div>
+  <div class="shots-grid">
+    <div class="shot">
+      <div class="shot-header">
+        <div class="shot-dots"><div class="shot-dot" style="background:#ff5f57"></div><div class="shot-dot" style="background:#febc2e"></div><div class="shot-dot" style="background:#28c840"></div></div>
+        <div class="shot-title">📩 Inbox</div>
+      </div>
+      <div class="shot-body">
+        <div class="shot-label">Smart Inbox</div>
+        <div class="shot-desc">All 500 emails loaded. Unread highlighted. Click any email to read and reply.</div>
+        <div class="shot-preview">
+          <div class="email-row"><div class="eav">P</div><div class="einfo"><div class="efrom" style="color:#e8e8e8;font-weight:700;">Prof. Sharma</div><div class="esub">Assignment deadline reminder</div></div></div>
+          <div class="email-row"><div class="eav" style="background:#1a1a1a;color:#555;">G</div><div class="einfo"><div class="efrom">Google</div><div class="esub">Security alert for your account</div></div></div>
+          <div class="email-row"><div class="eav" style="background:#2a1a4a;color:#8b5cf6;">L</div><div class="einfo"><div class="efrom">LinkedIn</div><div class="esub">3 people viewed your profile</div></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="shot">
+      <div class="shot-header">
+        <div class="shot-dots"><div class="shot-dot" style="background:#ff5f57"></div><div class="shot-dot" style="background:#febc2e"></div><div class="shot-dot" style="background:#28c840"></div></div>
+        <div class="shot-title">📅 Calendar</div>
+      </div>
+      <div class="shot-body">
+        <div class="shot-label">Calendar + Create Events</div>
+        <div class="shot-desc">View your week, create events from chat. "Add team meeting tomorrow 9am" — done.</div>
+        <div class="shot-preview">
+          <div class="cal-ev"><div class="cal-ev-title">Project Meeting</div><div class="cal-ev-time">Tomorrow · 9:00 AM – 10:00 AM</div></div>
+          <div class="cal-ev" style="background:#1a2f4a;border-color:#3b82f6;"><div class="cal-ev-title" style="color:#3b82f6;">Class — ML Lab</div><div class="cal-ev-time">Wed · 2:00 PM – 4:00 PM</div></div>
+          <div class="cal-ev" style="background:#2a1a1a;border-color:#f87171;"><div class="cal-ev-title" style="color:#f87171;">Assignment Deadline</div><div class="cal-ev-time">Thu · 11:59 PM</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="shot">
+      <div class="shot-header">
+        <div class="shot-dots"><div class="shot-dot" style="background:#ff5f57"></div><div class="shot-dot" style="background:#febc2e"></div><div class="shot-dot" style="background:#28c840"></div></div>
+        <div class="shot-title">✅ To Do</div>
+      </div>
+      <div class="shot-body">
+        <div class="shot-label">Tasks & Notes</div>
+        <div class="shot-desc">Keep tasks and notes right next to your inbox. No more switching apps.</div>
+        <div class="shot-preview">
+          <div class="todo-item"><div class="todo-check done"></div><div class="todo-text done">Reply to professor email</div></div>
+          <div class="todo-item"><div class="todo-check"></div><div class="todo-text">Submit ML assignment</div></div>
+          <div class="todo-item"><div class="todo-check"></div><div class="todo-text">Call Rahul about project</div></div>
+          <div class="todo-item"><div class="todo-check"></div><div class="todo-text">Review internship offer</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section id="features" style="padding:60px 24px;">
+  <div class="slabel">Features</div>
+  <div class="stitle">Everything your inbox needs</div>
+  <div class="ssub">One app replaces Gmail, Calendar, Notes and Todo list</div>
+  <div class="feat-grid">
+    <div class="fc"><div class="ficon">🤖</div><div class="ftitle">AI Chat with Inbox</div><div class="fdesc">Ask questions about your emails, get summaries, find anything — like a personal assistant who reads Gmail for you.</div></div>
+    <div class="fc"><div class="ficon">✉️</div><div class="ftitle">AI Email Drafting</div><div class="fdesc">Tell the AI what you want to say. It writes a professional email ready to send in seconds. Free for everyone.</div></div>
+    <div class="fc"><div class="ficon">📅</div><div class="ftitle">Smart Calendar</div><div class="fdesc">View, create and delete Google Calendar events. Just say "add meeting tomorrow 9am" in chat and it's done.</div></div>
+    <div class="fc"><div class="ficon">✅</div><div class="ftitle">Tasks & Notes</div><div class="fdesc">Keep todos and notes right next to your inbox. No more switching between 5 apps to stay organised.</div></div>
+    <div class="fc"><div class="ficon">🧠</div><div class="ftitle">AI Memory</div><div class="fdesc">Remembers your name, role, contacts. Tell it once — "Rahul is my boss at IBM" — it knows forever, per account.</div></div>
+    <div class="fc"><div class="ficon">🔒</div><div class="ftitle">Private by Design</div><div class="fdesc">Your emails never touch our servers. Everything stays in your browser. No tracking, no ads, no data selling.</div></div>
+    <div class="fc"><div class="ficon">✨</div><div class="ftitle">AI Check + Humanize</div><div class="fdesc">Check if your email sounds AI-written, then humanize it with one click. Scores 0-100 on AI detection.</div></div>
+    <div class="fc"><div class="ficon">📊</div><div class="ftitle">Inbox Analytics</div><div class="fdesc">See your email stats — total, unread, today's count. Understand your email patterns at a glance.</div></div>
+    <div class="fc"><div class="ficon">📎</div><div class="ftitle">File Reading (Premium)</div><div class="fdesc">Drag and drop files into chat. The AI reads and analyses text files, code and documents for you.</div></div>
+  </div>
+</section>
+
+<!-- UPDATES -->
+<section id="updates" style="padding:60px 24px;">
+  <div class="slabel">Updates</div>
+  <div class="stitle">What's new</div>
+  <div class="ssub">ChattyCHOP Inbox is actively developed. New features ship regularly.</div>
+  <div class="updates-list">
+    <div class="update">
+      <div class="update-date">Jul 2026</div>
+      <div class="update-content">
+        <div class="update-title">Calendar event creation from chat <span class="update-tag tag-new">NEW</span></div>
+        <div class="update-desc">Just say "add project meeting tomorrow at 9am" in chat — the AI creates it directly in Google Calendar.</div>
+      </div>
+    </div>
+    <div class="update">
+      <div class="update-date">Jul 2026</div>
+      <div class="update-content">
+        <div class="update-title">Live admin updates <span class="update-tag tag-new">NEW</span></div>
+        <div class="update-desc">Message limits, announcements and Pro codes now update for all users within 2 seconds — no refresh needed.</div>
+      </div>
+    </div>
+    <div class="update">
+      <div class="update-date">Jun 2026</div>
+      <div class="update-content">
+        <div class="update-title">Pro + Premium tier system <span class="update-tag tag-new">NEW</span></div>
+        <div class="update-desc">Code-based activation system. Pay → DM proof → get code → activate instantly in the app.</div>
+      </div>
+    </div>
+    <div class="update">
+      <div class="update-date">Jun 2026</div>
+      <div class="update-content">
+        <div class="update-title">Per-account data isolation <span class="update-tag tag-imp">IMPROVED</span></div>
+        <div class="update-desc">Chats, memory, notes and tasks are now completely separate per Gmail account on the same device.</div>
+      </div>
+    </div>
+    <div class="update">
+      <div class="update-date">Jun 2026</div>
+      <div class="update-content">
+        <div class="update-title">AI memory — people extraction <span class="update-tag tag-new">NEW</span></div>
+        <div class="update-desc">Tell the AI "Priya is my manager at Infosys" and it remembers — forever, per account.</div>
+      </div>
+    </div>
+    <div class="update">
+      <div class="update-date">Jun 2026</div>
+      <div class="update-content">
+        <div class="update-title">Announcement system <span class="update-tag tag-fix">FIX</span></div>
+        <div class="update-desc">Fixed announcements showing every 2 seconds. Now shows once per session, disappears with ×.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section id="reviews" style="padding:60px 24px;">
+  <div class="slabel">Reviews</div>
+  <div class="stitle">What users say</div>
+  <div class="ssub">Real reviews from real users. Only 4★ and 5★ shown.</div>
+  <div class="reviews-grid" id="reviews-grid">
+    <div style="text-align:center;color:#333;font-size:13px;padding:40px;grid-column:1/-1;">Loading reviews...</div>
+  </div>
+</section>
+
+<!-- FEEDBACK + REVIEW -->
+<section id="feedback" style="padding:60px 24px;">
+  <div class="slabel">Feedback</div>
+  <div class="stitle">Leave a review</div>
+  <div class="ssub">4★ and 5★ reviews get published automatically. You also get a notification email.</div>
+  <div class="form-wrap">
+    <input class="finp" type="text" id="rname" placeholder="Your name *"/>
+    <input class="finp" type="text" id="rrole" placeholder="Your role/occupation (e.g. Student, Developer)"/>
+    <!-- Star rating -->
+    <div style="margin-bottom:10px;">
+      <div style="font-size:11px;color:#444;letter-spacing:1px;margin-bottom:8px;">RATING *</div>
+      <div id="star-picker" style="display:flex;gap:6px;">
+        <span class="star" data-v="1" onclick="setStar(1)" style="font-size:28px;cursor:pointer;color:#333;transition:color .1s;">★</span>
+        <span class="star" data-v="2" onclick="setStar(2)" style="font-size:28px;cursor:pointer;color:#333;transition:color .1s;">★</span>
+        <span class="star" data-v="3" onclick="setStar(3)" style="font-size:28px;cursor:pointer;color:#333;transition:color .1s;">★</span>
+        <span class="star" data-v="4" onclick="setStar(4)" style="font-size:28px;cursor:pointer;color:#333;transition:color .1s;">★</span>
+        <span class="star" data-v="5" onclick="setStar(5)" style="font-size:28px;cursor:pointer;color:#333;transition:color .1s;">★</span>
+      </div>
+      <div id="star-label" style="font-size:11px;color:#444;margin-top:4px;"></div>
+    </div>
+    <textarea class="finp" id="rtext" placeholder="Your review... (what did you like? what can be better?)" rows="4"></textarea>
+    <button class="fsubmit" onclick="submitReview()">Submit Review →</button>
+    <div class="fmsg" id="rresult"></div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="pricing" style="padding:60px 24px;">
+  <div class="slabel">Pricing</div>
+  <div class="stitle">Simple, honest pricing</div>
+  <div class="ssub">Start free. Upgrade when you need more.</div>
+  <div class="pricing-grid">
+    <div class="pc">
+      <div class="pname">Free</div>
+      <div class="pprice">₹0<span>/month</span></div>
+      <div class="pdesc">Everything you need to get started.</div>
+      <div class="pfeats">
+        <div class="pfeat">15 AI messages/day</div>
+        <div class="pfeat">AI email drafting</div>
+        <div class="pfeat">Gmail inbox + send</div>
+        <div class="pfeat">Calendar management</div>
+        <div class="pfeat">Todos + Notes</div>
+      </div>
+      <a href="app.html" class="pbtn o">Get Started Free</a>
+    </div>
+    <div class="pc feat">
+      <div class="pbadge">Most Popular</div>
+      <div class="pname">Pro</div>
+      <div class="pprice">₹100<span>/month</span></div>
+      <div class="pdesc">For power users who live in their inbox.</div>
+      <div class="pfeats">
+        <div class="pfeat">100 AI messages/day</div>
+        <div class="pfeat">Everything in Free</div>
+        <div class="pfeat">AI Check + Humanize</div>
+        <div class="pfeat">Priority support</div>
+      </div>
+      <a href="app.html" class="pbtn f">Get Pro</a>
+    </div>
+    <div class="pc">
+      <div class="pname">Premium</div>
+      <div class="pprice">₹299<span>/month</span></div>
+      <div class="pdesc">For professionals who demand the best.</div>
+      <div class="pfeats">
+        <div class="pfeat">500 AI messages/day</div>
+        <div class="pfeat">Everything in Pro</div>
+        <div class="pfeat">File attach + AI reads</div>
+        <div class="pfeat">Best AI model</div>
+      </div>
+      <a href="app.html" class="pbtn o">Get Premium</a>
+    </div>
+  </div>
+  <p style="text-align:center;font-size:12px;color:var(--t3);margin-top:20px;">Pay via UPI · <b style="color:var(--t2)">9440425257@fam</b> · DM <a href="https://instagram.com/chatt.yx" target="_blank" style="color:var(--a);text-decoration:none;">@chatt.yx</a> with screenshot after payment</p>
+</section>
+
+<!-- GET CODE SECTION -->
+<section id="getcode" style="padding:60px 24px;">
+  <div class="slabel">Get Pro / Premium</div>
+  <div class="stitle">How to upgrade</div>
+  <div class="ssub">Simple 3-step process. Takes under 5 minutes.</div>
+  <div style="max-width:860px;margin:48px auto 0;display:grid;grid-template-columns:1fr 1fr;gap:24px;">
+
+    <!-- Steps -->
+    <div style="display:flex;flex-direction:column;gap:16px;">
+      <div style="background:#0d0d0d;border:1px solid #1a1a1a;border-radius:12px;padding:20px;display:flex;gap:14px;align-items:flex-start;">
+        <div style="width:36px;height:36px;border-radius:50%;background:#ff6b2b;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:14px;color:#fff;flex-shrink:0;">1</div>
+        <div>
+          <div style="font-size:14px;font-weight:700;margin-bottom:4px;">Scan & Pay via UPI</div>
+          <div style="font-size:13px;color:#666;line-height:1.6;">Scan the QR code or pay directly to <b style="color:#e8e8e8;">9440425257@fam</b> via any UPI app — GPay, PhonePe, Paytm etc.</div>
+        </div>
+      </div>
+      <div style="background:#0d0d0d;border:1px solid #1a1a1a;border-radius:12px;padding:20px;display:flex;gap:14px;align-items:flex-start;">
+        <div style="width:36px;height:36px;border-radius:50%;background:#ff6b2b;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:14px;color:#fff;flex-shrink:0;">2</div>
+        <div>
+          <div style="font-size:14px;font-weight:700;margin-bottom:4px;">DM screenshot to @chatt.yx</div>
+          <div style="font-size:13px;color:#666;line-height:1.6;">Send your payment screenshot on Instagram to <a href="https://instagram.com/chatt.yx" target="_blank" style="color:#ff6b2b;text-decoration:none;font-weight:600;">@chatt.yx</a> along with your Gmail address.</div>
+        </div>
+      </div>
+      <div style="background:#0d0d0d;border:1px solid #1a1a1a;border-radius:12px;padding:20px;display:flex;gap:14px;align-items:flex-start;">
+        <div style="width:36px;height:36px;border-radius:50%;background:#ff6b2b;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:14px;color:#fff;flex-shrink:0;">3</div>
+        <div>
+          <div style="font-size:14px;font-weight:700;margin-bottom:4px;">Receive your code & activate</div>
+          <div style="font-size:13px;color:#666;line-height:1.6;">You'll receive a code like <b style="color:#ff6b2b;font-family:monospace;">PRO-XXXXXXXXXXXXXXXX</b>. Enter it in the app under ⚡ Upgrade.</div>
+        </div>
+      </div>
+      <div style="background:#111;border:1px solid #222;border-radius:10px;padding:14px 16px;font-size:12px;color:#555;line-height:1.7;">
+        💡 Codes are tied to your specific Gmail. 1 month validity. Renew monthly by paying again and DMing proof.
+      </div>
+    </div>
+
+    <!-- QR Code -->
+    <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;">
+      <div style="background:#fff;border-radius:16px;padding:20px;display:flex;flex-direction:column;align-items:center;gap:10px;">
+        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAWgAAAFoAQAAAABSnlx4AAACy0lEQVR4nO2bwW7DMAxDySH//8vcQZTsDrsUdVu5dbEhafYOhODJlORQuOPzcw986EO/nYZygQsCIEmQFN9VzwPto3tX+gIingQokAIFAspfTEQf3bvSFwBwRBRULGoiIk9oEH10fwCtijoRV5GS/qefqeRL6Ai4l7KcXDL6L1XyufQFeFlHXBV5hCIEp/IiGunelb6AWsAiKIjyNzHvk+ije1f6qrULIPKJw5x5hRPRR/euNNN9OIPAK3pkbRHhV6BGunelbbZBESKU32eTGBGnOunemJYUHpAAQAgiSAEka70f/72KZhgTSMrE7QQSHyeaFyj5AhqSIHdRbEzcP4mrZF+u0z9ZQEdYMYVVw4/oD3Di/TAdCUSudWwHUT/DHuLsl4toyq1Xhzs7KJnLbVZOf3AFTc3lZTk/CqxKM/8Hjv9+nJ77J9n3HsnEnRSKz1fyHXT6E6B2y8mnwOYlL31070y7YrcrdCJX1fi6pZ+p5PPpyidRXI5mCdKkxAOd+nIJ7XxyOx7Ou0wn+fDkk4dpKndD1f3ofLuVhWwb9tG9OS2JFFge/I/5djerne7t6DHAyfGZ8t62eyb76N6ZZobbV8VpCIExNQbpwyi9dO9I1/mT8IC0R/HSZgTfzzvp3pWufCLHF9mkmnfLs1+uomtfzPp9+ottS7UMO+nemE6/F3Me0r3AyuFUtLJO/l5A5xgH86FYzx7cS6keyql3FtGknLzTgCNrTZX3Pv57HS0qRvHKHbLKTjjafI2ST6evkUNYyxhe4t4ma/TTSPeu9FURloYjiQunAU948j66d6Xn9xtA5KlYiJ49pCU//nsJPb3fEK0TojpVDjXDn5/zg8tppvvLI/ciGB1ynnnDE+g4FkE3TMoHVoHZVfc+9DSfD4cSK1k+eB/t7xrR99G9Kz2/3+CqJ8rK+ewJ83Ef3bvSU4PqzUoOfej19C+0lr1V/EFoZQAAAABJRU5ErkJggg==" style="width:180px;height:180px;border-radius:8px;" alt="UPI QR"/>
+        <div style="font-size:13px;font-weight:700;color:#111;">SCAN TO PAY</div>
+        <div style="font-size:15px;font-weight:900;color:#ff6b2b;letter-spacing:1px;">9440425257@fam</div>
+        <div style="font-size:11px;color:#888;">G. Badrinath · ChattyCHOP</div>
+      </div>
+      <div style="display:flex;gap:8px;">
+        <div style="background:#0d0d0d;border:1px solid #1a1a1a;border-radius:20px;padding:6px 14px;font-size:12px;color:#888;">🔵 Pro — ₹100/month</div>
+        <div style="background:#0d0d0d;border:1px solid #1a1a1a;border-radius:20px;padding:6px 14px;font-size:12px;color:#888;">⭐ Premium — ₹299/month</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GOOGLE WARNING EXPLAINER -->
+<section style="padding:40px 24px 60px;">
+  <div style="max-width:760px;margin:0 auto;background:#110a00;border:1px solid #ff6b2b33;border-radius:16px;padding:32px;">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;">
+      <div style="font-size:28px;">⚠️</div>
+      <div>
+        <div style="font-size:16px;font-weight:800;color:#ff6b2b;">Seeing a "Google hasn't verified this app" warning?</div>
+        <div style="font-size:12px;color:#555;margin-top:2px;">This is normal for independent apps and doesn't mean it's unsafe</div>
+      </div>
+    </div>
+    <p style="font-size:13px;color:#888;line-height:1.8;margin-bottom:20px;">ChattyCHOP Inbox is currently going through Google's OAuth verification process. Until verification is complete, Google shows this warning for all independent apps. The app is completely safe — your data never leaves your device.</p>
+    
+    <!-- Mock warning screen -->
+    <div style="background:#fff;border-radius:12px;padding:20px;max-width:380px;margin:0 auto 24px;text-align:center;">
+      <div style="font-size:13px;font-weight:700;color:#202124;margin-bottom:4px;">Google hasn't verified this app</div>
+      <div style="font-size:11px;color:#5f6368;margin-bottom:16px;line-height:1.5;">The app is requesting access to sensitive info in your Google Account. Until the developer verifies this app...</div>
+      <div style="display:flex;gap:8px;justify-content:center;margin-bottom:12px;">
+        <div style="padding:8px 16px;border:1px solid #dadce0;border-radius:4px;font-size:12px;color:#3c4043;cursor:default;">Back to safety</div>
+        <div style="padding:8px 16px;border:1px solid #dadce0;border-radius:4px;font-size:12px;color:#1a73e8;font-weight:600;cursor:default;">Advanced</div>
+      </div>
+      <div style="font-size:11px;color:#1a73e8;cursor:default;">↓ Click "Advanced"</div>
+    </div>
+
+    <div style="font-size:14px;font-weight:700;color:#e8e8e8;margin-bottom:14px;">How to proceed safely:</div>
+    <div style="display:flex;flex-direction:column;gap:10px;">
+      <div style="display:flex;gap:12px;align-items:flex-start;">
+        <div style="width:22px;height:22px;border-radius:50%;background:#ff6b2b;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0;">1</div>
+        <div style="font-size:13px;color:#888;line-height:1.6;">On the warning screen, click <b style="color:#e8e8e8;">"Advanced"</b> at the bottom</div>
+      </div>
+      <div style="display:flex;gap:12px;align-items:flex-start;">
+        <div style="width:22px;height:22px;border-radius:50%;background:#ff6b2b;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0;">2</div>
+        <div style="font-size:13px;color:#888;line-height:1.6;">Click <b style="color:#e8e8e8;">"Go to ChattyCHOP Inbox (unsafe)"</b> — the word "unsafe" just means unverified, not that it's harmful</div>
+      </div>
+      <div style="display:flex;gap:12px;align-items:flex-start;">
+        <div style="width:22px;height:22px;border-radius:50%;background:#ff6b2b;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0;">3</div>
+        <div style="font-size:13px;color:#888;line-height:1.6;">Grant the requested permissions and you're in! ✅</div>
+      </div>
+    </div>
+    <div style="margin-top:20px;padding:12px 16px;background:#0a0a0a;border-radius:8px;font-size:12px;color:#444;line-height:1.7;">
+      🔒 <b style="color:#666;">Your data is safe.</b> ChattyCHOP Inbox never stores your emails on any server. Everything stays in your browser. Read our <a href="privacy.html" style="color:#ff6b2b;text-decoration:none;">Privacy Policy</a> for full details.
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="flogo">
+    <div class="nicon">C</div>
+    <span style="font-weight:700;font-size:15px;">ChattyCHOP Inbox</span>
+  </div>
+  <div class="flinks">
+    <a href="app.html">Open App</a>
+    <a href="privacy.html">Privacy Policy</a>
+    <a href="https://youtube.com/@chattychop" target="_blank">YouTube</a>
+    <a href="https://instagram.com/chatt.yx" target="_blank">Instagram</a>
+    <a href="https://github.com/chattychop/ChattyChop-Inbox" target="_blank">GitHub ⭐</a>
+    <a href="https://linkedin.com/in/badrinath-g-52855a365" target="_blank">LinkedIn</a>
+  </div>
+  <p>Built by G. Badrinath · Andhra Pradesh, India 🇮🇳 · © 2026 ChattyCHOP</p>
+</footer>
+
+<script>
+var JSONBIN_URL='https://api.jsonbin.io/v3/b/6a30dea2da38895dfec7bede';
+var JSONBIN_KEY='$2a$10$6qmVIqD9vfUdur5dAZqc4eHFHI.6V5jIIVM6wiS1QyiFXgorvBs1G';
+var selectedStars=0;
+
+// ── STARS ──────────────────────────────────────────────────────
+var starLabels=['','Terrible','Poor','Okay','Good','Excellent!'];
+function setStar(n){
+  selectedStars=n;
+  document.querySelectorAll('.star').forEach(function(s){
+    s.style.color=parseInt(s.dataset.v)<=n?'#ff6b2b':'#333';
+  });
+  document.getElementById('star-label').textContent=starLabels[n]||'';
+}
+
+// ── SUBMIT REVIEW ──────────────────────────────────────────────
+async function submitReview(){
+  var name=document.getElementById('rname').value.trim();
+  var role=document.getElementById('rrole').value.trim();
+  var text=document.getElementById('rtext').value.trim();
+  var res=document.getElementById('rresult');
+  if(!name){res.style.color='#f87171';res.textContent='Please enter your name';return;}
+  if(!selectedStars){res.style.color='#f87171';res.textContent='Please select a star rating';return;}
+  if(!text){res.style.color='#f87171';res.textContent='Please write your review';return;}
+  res.style.color='#888';res.textContent='Submitting...';
+  try{
+    // Get current bin
+    var r=await fetch(JSONBIN_URL+'/latest?meta=false');
+    if(!r.ok)throw new Error('Bin fetch failed: '+r.status);
+    var d=await r.json();
+    if(!d||typeof d!=='object')throw new Error('Invalid bin response');
+    var reviews=d.reviews||[];
+    var newReview={
+      id:Date.now().toString(),
+      name:name,
+      role:role||'ChattyCHOP User',
+      text:text,
+      stars:selectedStars,
+      date:new Date().toLocaleDateString('en-IN',{month:'short',year:'numeric'}),
+      approved:selectedStars>=4 // Auto-approve 4+ stars
+    };
+    reviews.push(newReview);
+    // Save to JSONBin
+    await fetch(JSONBIN_URL,{
+      method:'PUT',
+      headers:{'Content-Type':'application/json','X-Master-Key':JSONBIN_KEY},
+      body:JSON.stringify({...d,reviews:reviews})
+    });
+    // Notify via email
+    // Review saved to JSONBin — managed via admin panel
+
+    if(selectedStars>=4){
+      res.style.color='#22c55e';
+      res.textContent='✅ Review published! Thank you '+name+'! 🎉';
+      loadReviews();
+    } else {
+      res.style.color='#f59e0b';
+      res.textContent='Review submitted! Thank you '+name+'!';
+    }
+    // Ask to support on socials
+    setTimeout(function(){
+      if(confirm('Thank you for your review! 🙏\n\nWould you like to support ChattyCHOP?\n\n• ⭐ Star on GitHub\n• 📸 Follow on Instagram\n• ▶️ Subscribe on YouTube\n\nClick OK to open all three!')){
+        window.open('https://github.com/chattychop/ChattyChop-Inbox','_blank');
+        setTimeout(function(){window.open('https://instagram.com/chatt.yx','_blank');},500);
+        setTimeout(function(){window.open('https://youtube.com/@chattychop','_blank');},1000);
+      }
+    },1000);
+    document.getElementById('rname').value='';
+    document.getElementById('rrole').value='';
+    document.getElementById('rtext').value='';
+    setStar(0);selectedStars=0;
+  }catch(e){
+    res.style.color='#f87171';
+    res.textContent='Error: '+e.message+'. Please try again!';
+    console.error('Review submit error:',e);
+  }
+}
+
+// ── LOAD REVIEWS ───────────────────────────────────────────────
+async function loadReviews(){
+  var grid=document.getElementById('reviews-grid');
+  if(!grid)return;
+  try{
+    var r=await fetch(JSONBIN_URL+'/latest?meta=false');
+    var d=await r.json();
+    if(!d||!d.reviews||!d.reviews.length){
+      grid.innerHTML='<div style="text-align:center;color:#333;font-size:13px;padding:40px;grid-column:1/-1;">No reviews yet — be the first! ⬇️</div>';
+      return;
+    }
+    // Public: show only approved. Admin: show all
+    var reviews=d.reviews.filter(function(rv){return rv.approved;});
+    if(!reviews.length){
+      grid.innerHTML='<div style="text-align:center;color:#333;font-size:13px;padding:40px;grid-column:1/-1;">No reviews yet — be the first! ⬇️</div>';
+      return;
+    }
+    grid.innerHTML=reviews.map(function(rv){
+      var stars='★'.repeat(rv.stars)+'☆'.repeat(5-rv.stars);
+      var initial=(rv.name||'U')[0].toUpperCase();
+      var colors=['#ff6b2b','#8b5cf6','#3b82f6','#22c55e','#f59e0b'];
+      var color=colors[rv.name.charCodeAt(0)%colors.length];
+      return '<div class="review">'
+        +'<div class="stars" style="color:#ff6b2b;">'+stars+'</div>'
+        +'<div class="rtext">&ldquo;'+rv.text+'&rdquo;</div>'
+        +'<div class="rauthor">'
+        +'<div class="rav" style="background:'+color+'">'+initial+'</div>'
+        +'<div><div class="rname">'+rv.name+'</div><div class="rrole">'+rv.role+(rv.date?' · '+rv.date:'')+'</div></div>'
+        +'</div>'
+        +'</div>';
+    }).join('');
+  }catch(e){
+    grid.innerHTML='<div style="text-align:center;color:#333;font-size:13px;padding:40px;grid-column:1/-1;">No reviews yet — be the first!</div>';
+  }
+}
+
+// Approve a pending review
+async function approveReview(id){
+  try{
+    var r=await fetch(JSONBIN_URL+'/latest?meta=false');
+    var d=await r.json();
+    d.reviews=(d.reviews||[]).map(function(rv){return rv.id===id?{...rv,approved:true}:rv;});
+    await fetch(JSONBIN_URL,{method:'PUT',headers:{'Content-Type':'application/json','X-Master-Key':JSONBIN_KEY},body:JSON.stringify(d)});
+    loadReviews();
+  }catch(e){alert('Error approving review');}
+}
+
+// ── REMOVE REVIEW (Admin) ──────────────────────────────────────
+async function removeReview(id){
+  if(!confirm('Remove this review?'))return;
+  try{
+    var r=await fetch(JSONBIN_URL+'/latest?meta=false');
+    var d=await r.json();
+    d.reviews=(d.reviews||[]).filter(function(rv){return rv.id!==id;});
+    await fetch(JSONBIN_URL,{method:'PUT',headers:{'Content-Type':'application/json','X-Master-Key':JSONBIN_KEY},body:JSON.stringify(d)});
+    loadReviews();
+  }catch(e){alert('Error removing review');}
+}
+
+
+
+// ── INIT ───────────────────────────────────────────────────────
+loadReviews();
+</script>
+</body>
+</html>
