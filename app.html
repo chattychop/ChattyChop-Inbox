@@ -538,7 +538,7 @@ async function callAI(messages, settings, signal) {
   var provider = APP_CONFIG.groqKey ? 'groq' : (settings&&settings.provider||'groq');
   var apiKey = APP_CONFIG.groqKey || (settings&&settings.apiKey) || '';
   var model = APP_CONFIG.freeModel || (settings&&settings.model) || 'llama-3.3-70b-versatile';
-  if(!apiKey) throw new Error('AI not ready. Contact @chatt.yx on Instagram!');
+ if(!apiKey) throw new Error('⚠️ ChattyCHOP Inbox is currently undergoing maintenance. We\'ll be back shortly — thank you for your patience! 🙏');
   if(provider==='anthropic') {
     const r = await fetch('https://api.anthropic.com/v1/messages',{
       method:'POST', signal,
